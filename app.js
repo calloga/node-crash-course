@@ -3,6 +3,7 @@ const morgan = require("morgan");
 const mongoose = require("mongoose");
 
 const Blog = require("./models/blog");
+const { nextTick } = require("process");
 
 const blogs = [
   {
@@ -39,47 +40,9 @@ app.set("view engine", "ejs");
 // middleware & static files
 app.use(morgan("dev"));
 app.use(express.static("public"));
-
-// mongoose and mongodb sandbox routes
-
-app.get("/add-blog", (req, res) => {
-  const blog = new Blog({
-    title: "New Blog 3",
-    snippet: "This is a new blog",
-    body: "So yes this is a new blog yayy!",
-  });
-  blog
-    .save()
-    .then((result) => {
-      res.send(result);
-    })
-    .catch((err) => {
-      console.error(err);
-    });
-});
-
-app.get("/all-blogs", (req, res) => {
-  Blog.find()
-    .then((blog) => {
-      res.send(blog);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
-
-app.get("/single-blog", (req, res) => {
-  Blog.findById("633a765f25cecc046a45f5e0")
-    .then((blog) => {
-      res.send(blog);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
 //routes
 app.get("/", (req, res) => {
-  res.render("index", { title: "Home", blogs });
+  res.redirect("/blogs");
 });
 
 app.get("/about", (req, res) => {
@@ -89,8 +52,33 @@ app.get("/about", (req, res) => {
 app.get("/blogs/create", (req, res) => {
   res.render("create", { title: "New Blog" });
 });
+
+// blog routes
+
+app.get("/blogs", (req, res) => {
+  Blog.find()
+    .sort({ createdAt: -1 })
+    .then((result) => {
+      res.render("index", { title: "All blogs ", blogs: result });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
+app.get("/single-blog", (req, res) => {
+  Blog.findById("633a765f25cecc046a45f5e0")
+    .then((blog) => {
+      res.render();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
 // 404 page
 
-app.use((req, res) => {
+app.use((req, res, next) => {
   res.status(404).render("404");
+  next();
 });
