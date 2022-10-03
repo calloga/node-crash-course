@@ -1,5 +1,6 @@
 const express = require("express");
 const morgan = require("morgan");
+const mongoose = require("mongoose");
 const blogs = [
   {
     title: "Yoshi says their truth",
@@ -20,13 +21,17 @@ const blogs = [
 // express app
 
 const app = express();
-
+// connect to MongoDB
+const dbURI =
+  "mongodb+srv://calloga:passer@nodetuts.ydjpbyi.mongodb.net/?retryWrites=true&w=majority";
+mongoose
+  .connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then((result) => app.listen(3000))
+  .catch((err) => console.log(err));
 // register view engine
 
 app.set("view engine", "ejs");
 // listen for requests
-
-app.listen(3000);
 
 // middleware & static files
 app.use(morgan("dev"));
