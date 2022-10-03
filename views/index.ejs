@@ -1,23 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Blog Ninja | <%= title %></title>
-  </head>
+  <%- include("./partials/head.ejs") %>
 
   <body>
-    <nav>
-      <div class="site-title">
-        <a href="/"><h1>Blog Ninja</h1></a>
-        <p>A Net Ninja Site</p>
-      </div>
-      <ul>
-        <li><a href="/">BLog</a></li>
-        <li><a href="/about">About</a></li>
-        <li><a href="/blogs/create">New Blog</a></li>
-      </ul>
-    </nav>
+    <%- include("./partials/nav.ejs") %>
+    <h1>Home</h1>
+    <h2>Your path to becoming a Node.js ninja!</h2>
     <div class="blog-content">
       <h2>All BLogs</h2>
       <% if(blogs.length>0){ blogs.forEach(element => { %>
@@ -29,7 +17,7 @@
       <p>There are no blogs to display</p>
       <%} %>
     </div>
-    <h1>Home</h1>
-    <h2>Your path to becoming a Node.js ninja!</h2>
+
+    <%- include("./partials/footer.ejs") %>
   </body>
 </html>
