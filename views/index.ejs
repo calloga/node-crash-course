@@ -6,12 +6,14 @@
     <%- include("./partials/nav.ejs") %>
     <h1>Home</h1>
     <h2>Your path to becoming a Node.js ninja!</h2>
-    <div class="blog-content">
-      <h2>All BLogs</h2>
+    <h2>All BLogs</h2>
+    <div class="blogs content">
       <% if(blogs.length>0){ blogs.forEach(element => { %>
 
-      <h3 class="title"><%= element.title %></h3>
-      <p class="snipper"><%= element.snippet %></p>
+      <div class="blog">
+        <h3 class="title"><%= element.title %></h3>
+        <p class="snipper"><%= element.snippet %></p>
+      </div>
 
       <% })}else{ %>
       <p>There are no blogs to display</p>
