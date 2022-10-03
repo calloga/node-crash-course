@@ -10,10 +10,10 @@
     <div class="blogs content">
       <% if(blogs.length>0){ blogs.forEach(element => { %>
 
-      <div class="blog">
+      <a href="/blogs/<%= element._id %>" class="blog">
         <h3 class="title"><%= element.title %></h3>
         <p class="snipper"><%= element.snippet %></p>
-      </div>
+      </a>
 
       <% })}else{ %>
       <p>There are no blogs to display</p>

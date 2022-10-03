@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 
 const Blog = require("./models/blog");
 const { nextTick } = require("process");
+const { blob } = require("stream/consumers");
+const { result } = require("lodash");
 
 const blogs = [
   {
@@ -38,8 +40,9 @@ app.set("view engine", "ejs");
 // listen for requests
 
 // middleware & static files
-app.use(morgan("dev"));
+
 app.use(express.static("public"));
+app.use(express.urlencoded({ extended: true }));
 //routes
 app.get("/", (req, res) => {
   res.redirect("/blogs");
@@ -65,20 +68,47 @@ app.get("/blogs", (req, res) => {
       console.log(err);
     });
 });
-
-app.get("/single-blog", (req, res) => {
-  Blog.findById("633a765f25cecc046a45f5e0")
-    .then((blog) => {
-      res.render();
-    })
+app.post("/blogs", function (req, res) {
+  const blog = new Blog(req.body);
+  blog
+    .save()
+    .then(res.redirect("/blogs"))
     .catch((err) => {
       console.log(err);
     });
 });
 
+app.get("/blogs/:id", (req, res) => {
+  const id = req.params.id;
+  Blog.findById(id).then((blog) => {
+    res.render("details", { title: blog.title, blog: blog });
+  });
+});
+
+app.delete("/blogs/:id", (req, res) => {
+  const id = req.params.id;
+
+  Blog.findByIdAndDelete(id)
+    .then((blog) => {
+      res.json({ redirect: "/blogs" });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+// app.get("/single-", (req, res) => {
+//   Blog.findById("633a765f25cecc046a45f5e0")
+//     .then((blog) => {
+//       res.render();
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//     });
+// });
+
 // 404 page
 
 app.use((req, res, next) => {
-  res.status(404).render("404");
+  res.status(404).render("404", { title: "404" });
   next();
 });
