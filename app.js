@@ -1,6 +1,9 @@
 const express = require("express");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
+
+const Blog = require("./models/blog");
+
 const blogs = [
   {
     title: "Yoshi says their truth",
@@ -37,6 +40,44 @@ app.set("view engine", "ejs");
 app.use(morgan("dev"));
 app.use(express.static("public"));
 
+// mongoose and mongodb sandbox routes
+
+app.get("/add-blog", (req, res) => {
+  const blog = new Blog({
+    title: "New Blog 3",
+    snippet: "This is a new blog",
+    body: "So yes this is a new blog yayy!",
+  });
+  blog
+    .save()
+    .then((result) => {
+      res.send(result);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+});
+
+app.get("/all-blogs", (req, res) => {
+  Blog.find()
+    .then((blog) => {
+      res.send(blog);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
+app.get("/single-blog", (req, res) => {
+  Blog.findById("633a765f25cecc046a45f5e0")
+    .then((blog) => {
+      res.send(blog);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+//routes
 app.get("/", (req, res) => {
   res.render("index", { title: "Home", blogs });
 });
