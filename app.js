@@ -1,5 +1,5 @@
 const express = require("express");
-
+const morgan = require("morgan");
 const blogs = [
   {
     title: "Yoshi says their truth",
@@ -27,6 +27,10 @@ app.set("view engine", "ejs");
 // listen for requests
 
 app.listen(3000);
+
+// middleware & static files
+app.use(morgan("dev"));
+app.use(express.static("public"));
 
 app.get("/", (req, res) => {
   res.render("index", { title: "Home", blogs });
